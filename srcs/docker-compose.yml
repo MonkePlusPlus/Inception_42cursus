@@ -4,7 +4,7 @@ services:
                 build: requirements/mariadb
                 image: mariadb
                 container_name: mariadb
-                env_file: /home/ptheo/.env
+                env_file: .env
                 volumes:
                         - mariadb:/var/lib/mysql
                 restart: on-failure
@@ -17,7 +17,7 @@ services:
                 depends_on:
                         - mariadb
                 container_name: wordpress
-                env_file: /home/ptheo/.env
+                env_file: .env
                 volumes:
                         - wordpress:/var/www/wordpress
                 restart: on-failure
@@ -30,7 +30,7 @@ services:
                 depends_on:
                         - wordpress
                 container_name: nginx
-                env_file: /home/ptheo/.env
+                env_file: .env
                 volumes:
                         - wordpress:/var/www/wordpress
                 ports:
