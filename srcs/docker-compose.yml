@@ -1,16 +1,56 @@
 
 services:
-  nginx:
-    build: requirements/nginx/.
-    container_name: nginx
-    ports:
-      - "433:433"
-    volumes:
-      - ./web:/var/www/html
+        mariadb:
+                build: requirements/mariadb
+                image: mariadb
+                container_name: mariadb
+                env_file: /home/ptheo/.env
+                volumes:
+                        - mariadb:/var/lib/mysql
+                restart: on-failure
+                networks:
+                        - inception
 
-  wordpress:
-    build: requirements/wordpress/.
-    container_name: wp-php
-    volumes:
-      - ./web:/var/www/html
-  
+        wordpress:
+                build: requirements/wordpress
+                image: wordpress
+                depends_on:
+                        - mariadb
+                container_name: wordpress
+                env_file: /home/ptheo/.env
+                volumes:
+                        - wordpress:/var/www/wordpress
+                restart: on-failure
+                networks:
+                        - inception
+
+        nginx:
+                build: requirements/nginx
+                image: nginx
+                depends_on:
+                        - wordpress
+                container_name: nginx
+                env_file: /home/ptheo/.env
+                volumes:
+                        - wordpress:/var/www/wordpress
+                ports:
+                        - "443:443"
+                restart: on-failure
+                networks:
+                        - inception
+
+networks:
+        inception:
+                driver: bridge
+
+volumes:
+        mariadb:
+                driver_opts:
+                        type: none
+                        device: /home/ptheo/data/mysql
+                        o: bind
+        wordpress:
+                driver_opts:
+                        type: none
+                        device: /home/ptheo/data/html
+                        o: bind
