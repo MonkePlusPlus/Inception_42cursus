@@ -47,13 +47,13 @@ list:
 	docker images -a
 
 delete:
-	cd srcs && docker-compose stop nginx
-	cd srcs && docker-compose stop wordpress
-	cd srcs && docker-compose stop mariadb
+	cd srcs && docker compose stop nginx
+	cd srcs && docker compose stop wordpress
+	cd srcs && docker compose stop mariadb
 	docker system prune -a
 
 logs:
-	cd srcs && docker-compose logs mariadb wordpress nginx
+	cd srcs && docker compose logs mariadb wordpress nginx
 
 
 .PHONY: hosts all install build up start down remove re list images delete
